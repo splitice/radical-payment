@@ -1,0 +1,16 @@
+{
+	"keywords" : [
+		"radical-php"
+	],
+	"autoload" : {
+		"psr-0" : {
+			"Radical" : "src"
+		}
+	},
+	"name" : "splitice/radical-payment",
+	"type" : "library",
+	"description" : "radical-payment",
+	"require" : {
+		"php" : ">=5.4"
+	}
+}
