@@ -1,7 +1,7 @@
 <?php
-namespace Utility\Payment\External;
+namespace Radical\Utility\Payment\External;
 
-use Utility\Payment\Logging;
+use Radical\Utility\Payment\Logging;
 
 class Alertpay {
 	const IPN = "https://secure.payza.com/ipn2.ashx";

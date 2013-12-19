@@ -1,10 +1,10 @@
 <?php
-namespace Utility\Payment\Modules;
+namespace Radical\Utility\Payment\Modules;
 
-use Utility\Payment\Transaction;
+use Radical\Utility\Payment\Transaction;
 
-use Utility\Payment\Order;
-use Utility\Payment\External;
+use Radical\Utility\Payment\Order;
+use Radical\Utility\Payment\External;
 
 class Paypal implements IPaymentModule {
 	const SANDBOX_URL = 'https://www.sandbox.paypal.com/cgi-bin/webscr';

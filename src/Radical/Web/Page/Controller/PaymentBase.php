@@ -1,11 +1,11 @@
 <?php
 namespace Web\Page\Controller;
 
-use Utility\Payment\Order;
-use Utility\Payment\Transaction;
+use Radical\Utility\Payment\Order;
+use Radical\Utility\Payment\Transaction;
 use Web\Page\Handler\HTMLPageBase;
 use Web\Page\Handler;
-use Utility\Payment;
+use Radical\Utility\Payment;
 use Web\Page\Controller\Special\Redirect;
 
 abstract class PaymentBase extends HTMLPageBase {

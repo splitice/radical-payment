@@ -1,8 +1,8 @@
 <?php
-namespace Utility\Payment\Modules;
-use Utility\Payment\Transaction;
-use Utility\Payment\Order;
-use Utility\Payment\External;
+namespace Radical\Utility\Payment\Modules;
+use Radical\Utility\Payment\Transaction;
+use Radical\Utility\Payment\Order;
+use Radical\Utility\Payment\External;
 
 class Alertpay implements IPaymentModule {
 	protected $ipn;

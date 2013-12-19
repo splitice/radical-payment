@@ -1,7 +1,7 @@
 <?php
-namespace Utility\Payment\External;
+namespace Radical\Utility\Payment\External;
 
-use Utility\Payment\Logging;
+use Radical\Utility\Payment\Logging;
 
 /*******************************************************************************
  * PHP Paypal IPN Integration Class
@@ -174,7 +174,7 @@ class Paypal {
 			
 			// could not open the connection.  If loggin is on, the error message
 			// will be in the log.
-			$this->last_error = "fsockopen error no. $errnum: $errstr";
+			$this->last_error = "fsockopen error no. $err_num: $err_str";
 			$this->log_ipn_results ( false );
 			return false;
 		

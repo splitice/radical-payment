@@ -1,5 +1,5 @@
 <?php
-namespace Utility\Payment\Modules;
+namespace Radical\Utility\Payment\Modules;
 
 interface IPaymentModule {
 	function bill($ammount);

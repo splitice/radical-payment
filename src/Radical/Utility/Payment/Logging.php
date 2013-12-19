@@ -1,7 +1,7 @@
 <?php
-namespace Utility\Payment;
+namespace Radical\Utility\Payment;
 
-use Utility\Payment\Modules\IPaymentModule;
+use Radical\Utility\Payment\Modules\IPaymentModule;
 
 /**
  * When dealing with finances its important to log raw 

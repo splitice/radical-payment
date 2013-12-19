@@ -1,5 +1,5 @@
 <?php
-namespace Utility\Payment;
+namespace Radical\Utility\Payment;
 
 class Order {
 	public $ammount;

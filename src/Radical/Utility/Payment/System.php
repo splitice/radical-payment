@@ -1,5 +1,5 @@
 <?php
-namespace Utility\Payment;
+namespace Radical\Utility\Payment;
 
 abstract class System {
 	protected $module;
@@ -28,7 +28,8 @@ abstract class System {
 				return $this->onCancel();
 		
 			case 'ipn': // Paypal is calling page for IPN validation...
-				if($transaction = $this->module->ipn()){
+				$transaction = $this->module->ipn();
+				if($transaction){
 					if($transaction === true){
 						die('Not Handling');
 					}
