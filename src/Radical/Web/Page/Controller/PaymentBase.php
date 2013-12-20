@@ -2,11 +2,9 @@
 namespace Web\Page\Controller;
 
 use Radical\Utility\Payment\Order;
-use Radical\Utility\Payment\Transaction;
-use Web\Page\Handler\HTMLPageBase;
-use Web\Page\Handler;
+use Radical\Web\Page\Handler\HTMLPageBase;
 use Radical\Utility\Payment;
-use Web\Page\Controller\Special\Redirect;
+use Radical\Web\Page\Controller\Special\Redirect;
 
 abstract class PaymentBase extends HTMLPageBase {
 	protected $system;
