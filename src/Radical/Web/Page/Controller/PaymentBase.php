@@ -1,5 +1,5 @@
 <?php
-namespace Web\Page\Controller;
+namespace Radical\Web\Page\Controller;
 
 use Radical\Utility\Payment\Order;
 use Radical\Web\Page\Handler\HTMLPageBase;
