@@ -54,13 +54,13 @@ class BitPay implements IPaymentModule {
 			die('ERR: Verification');
 		}
 		
-		if($invoice->status == 'confirmed') {
+		if($invoice->status == 'confirmed' || $invoice->status == 'complete') {
 			$transaction = new Transaction();
 			$transaction->id = $invoice->id;
 			
 			$transaction->gross = $invoice->price;
 			$transaction->fee = 0;
-			$transaction->sender = 'bitcoin@bitcoin.com';
+			$transaction->sender = md5($_SERVER['REMOTE_ADDR']).'@bitcoin.com';
 			
 			$order = new Order($transaction->gross - $transaction->fee);
 			
