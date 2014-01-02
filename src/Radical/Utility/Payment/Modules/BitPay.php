@@ -16,9 +16,11 @@ class BitPay implements IPaymentModule {
 		
 		$options = array();
 		$options['notificationURL'] = $this->ipn . '?action=ipn';
+		$options['redirectURL'] = $this->ipn . '?action=success';
 		$options['currency'] = 'USD';
 		$options['physical'] = 'false';
 		$options['transactionSpeed'] = 'high';
+
 		
 		$this->bitPay = new \BitPay\BitPay(
 				new \BitPay\Request\Curl,
@@ -34,24 +36,35 @@ class BitPay implements IPaymentModule {
 		
 		$options = array();
 		$options['itemCode'] = $order->item;
+		$pos_data = implode('|',array($order->name,$order->item));
 		
-		return $this->bitPay->createInvoice($order->id, $order->ammount, $order->name, $options);
+		return $this->bitPay->createInvoice($order->id, $order->ammount, $pos_data, $options);
 	}
 	function subscribe($ammount){
 		
 	}
 	function ipn(){
-		if(isset($this->p->ipn_data['payment_status']) && ($this->p->ipn_data['payment_status'] == 'Completed' || $this->p->ipn_data['payment_status'] == 'Reversed')) {
+		$post_data = file_get_contents("php://input");
+		//file_put_contents('/tmp/test_post', file_get_contents("php://input"));
+		//$post_data = file_get_contents("/tmp/test_post");
+		
+		$invoice = $this->bitPay->verifyNotification($post_data);
+		
+		if(!is_object($invoice)){
+			die('ERR: Verification');
+		}
+		
+		if($invoice->status == 'confirmed' || $invoice->status == 'complete') {
 			$transaction = new Transaction();
-			$transaction->id = $this->p->ipn_data['txn_id'];
+			$transaction->id = $invoice->id;
 			
-			$transaction->gross = $this->p->ipn_data ['mc_gross'];
-			$transaction->fee = $this->p->ipn_data['mc_fee'];
-			$transaction->sender = $this->p->ipn_data['payer_email'];
+			$transaction->gross = $invoice->price;
+			$transaction->fee = 0;
+			$transaction->sender = 'bitcoin@bitcoin.com';
 			
 			$order = new Order($transaction->gross - $transaction->fee);
-			$order->name = $this->p->ipn_data['item_name'];
-			$order->item = $this->p->ipn_data['item_number'];
+			
+			list($order->name, $order->item) = explode('|', $invoice->posData);
 			
 			$transaction->order = $order;
 			
