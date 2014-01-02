@@ -3,20 +3,53 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "1f73534e989879dcc8738489e141b18e",
+    "hash": "b9ba4f3fd1e4c68abff9287d30dd7532",
     "packages": [
+        {
+            "name": "bitpay/php-client",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fedeisas/php-client",
+                "reference": "f3f4d92a386d98ca40044f7766b99d82410d1494"
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "jakub-onderka/php-console-highlighter": "dev-master",
+                "jakub-onderka/php-parallel-lint": "*",
+                "mockery/mockery": "0.8.0",
+                "phpunit/phpunit": "3.7.27",
+                "squizlabs/php_codesniffer": "1.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "BitPay\\Tests": "tests/",
+                    "BitPay": "src/"
+                }
+            },
+            "description": "BitPay PHP Client",
+            "keywords": [
+                "bitcoin",
+                "bitpay"
+            ],
+            "time": "2013-12-13 18:22:43"
+        },
         {
             "name": "splitice/radical-basic",
             "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/splitice/radical-basic.git",
-                "reference": "b41cccfc159f3a72c389c256fdabdfe56a010a9f"
+                "reference": "edef9b8ec59a65722b262f2ee196b393c2520513"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/splitice/radical-basic/zipball/b41cccfc159f3a72c389c256fdabdfe56a010a9f",
-                "reference": "b41cccfc159f3a72c389c256fdabdfe56a010a9f",
+                "url": "https://api.github.com/repos/splitice/radical-basic/zipball/edef9b8ec59a65722b262f2ee196b393c2520513",
+                "reference": "edef9b8ec59a65722b262f2ee196b393c2520513",
                 "shasum": ""
             },
             "require": {
@@ -37,7 +70,7 @@
             "keywords": [
                 "radical-php"
             ],
-            "time": "2013-12-20 05:08:04"
+            "time": "2013-12-29 06:53:16"
         },
         {
             "name": "splitice/radical-common",
@@ -45,12 +78,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/splitice/radical-common.git",
-                "reference": "3ce1b174cc7fcc1116b4c3b71835f1a6dff28d3b"
+                "reference": "8027939c341470946c711e66de0d547f7a946f04"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/splitice/radical-common/zipball/3ce1b174cc7fcc1116b4c3b71835f1a6dff28d3b",
-                "reference": "3ce1b174cc7fcc1116b4c3b71835f1a6dff28d3b",
+                "url": "https://api.github.com/repos/splitice/radical-common/zipball/8027939c341470946c711e66de0d547f7a946f04",
+                "reference": "8027939c341470946c711e66de0d547f7a946f04",
                 "shasum": ""
             },
             "require": {
@@ -68,7 +101,7 @@
             "keywords": [
                 "radical-php"
             ],
-            "time": "2013-12-24 10:39:16"
+            "time": "2013-12-29 06:52:59"
         },
         {
             "name": "splitice/radical-file",
@@ -107,12 +140,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/splitice/radical-html.git",
-                "reference": "9f3e008ca1797624bc01e4723715a26d9c86ffaf"
+                "reference": "3dbf0a4a008b46706e60ad5febb63dcd5355d466"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/splitice/radical-html/zipball/9f3e008ca1797624bc01e4723715a26d9c86ffaf",
-                "reference": "9f3e008ca1797624bc01e4723715a26d9c86ffaf",
+                "url": "https://api.github.com/repos/splitice/radical-html/zipball/3dbf0a4a008b46706e60ad5febb63dcd5355d466",
+                "reference": "3dbf0a4a008b46706e60ad5febb63dcd5355d466",
                 "shasum": ""
             },
             "require": {
@@ -129,7 +162,7 @@
             "keywords": [
                 "radical-php"
             ],
-            "time": "2013-12-19 08:08:16"
+            "time": "2013-12-30 05:09:35"
         },
         {
             "name": "splitice/radical-net",
@@ -137,12 +170,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/splitice/radical-net.git",
-                "reference": "7bd66f274aada53e56a0b9b05dc83ad3d705e334"
+                "reference": "6e58e437e0159e74c5d654ffbb1bf12c23c0bbb9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/splitice/radical-net/zipball/7bd66f274aada53e56a0b9b05dc83ad3d705e334",
-                "reference": "7bd66f274aada53e56a0b9b05dc83ad3d705e334",
+                "url": "https://api.github.com/repos/splitice/radical-net/zipball/6e58e437e0159e74c5d654ffbb1bf12c23c0bbb9",
+                "reference": "6e58e437e0159e74c5d654ffbb1bf12c23c0bbb9",
                 "shasum": ""
             },
             "require": {
@@ -161,7 +194,7 @@
             "keywords": [
                 "radical-php"
             ],
-            "time": "2013-12-24 07:34:04"
+            "time": "2013-12-29 07:53:20"
         },
         {
             "name": "splitice/radical-web",
@@ -169,12 +202,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/splitice/radical-web.git",
-                "reference": "1fc26149c7e83cccfa7cda2bca415090abd1191e"
+                "reference": "21802948b84a83f26ab95bd76d5986bec28e78d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/splitice/radical-web/zipball/1fc26149c7e83cccfa7cda2bca415090abd1191e",
-                "reference": "1fc26149c7e83cccfa7cda2bca415090abd1191e",
+                "url": "https://api.github.com/repos/splitice/radical-web/zipball/21802948b84a83f26ab95bd76d5986bec28e78d9",
+                "reference": "21802948b84a83f26ab95bd76d5986bec28e78d9",
                 "shasum": ""
             },
             "require": {
@@ -196,7 +229,7 @@
             "keywords": [
                 "radical-php"
             ],
-            "time": "2013-12-24 07:33:49"
+            "time": "2013-12-29 07:33:05"
         },
         {
             "name": "symfony/filesystem",
@@ -255,7 +288,8 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "splitice/radical-common": 20,
-        "splitice/radical-web": 20
+        "splitice/radical-web": 20,
+        "bitpay/php-client": 20
     },
     "platform": {
         "php": ">=5.4"

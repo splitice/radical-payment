@@ -27,7 +27,7 @@ abstract class PaymentBase extends HTMLPageBase {
 				if($order instanceof Redirect)
 					return $order;
 				
-				$this->bill($order);
+				return $this->bill($order);
 			}
 		}
 	}

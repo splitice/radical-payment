@@ -3,10 +3,12 @@
 	<buildpathentry kind="src" path="vendor/splitice/radical-web/src"/>
 	<buildpathentry kind="src" path="vendor/composer"/>
 	<buildpathentry kind="con" path="org.eclipse.php.core.LANGUAGE"/>
+	<buildpathentry kind="src" path="vendor/bitpay/php-client/src"/>
 	<buildpathentry kind="src" path="vendor/splitice/radical-common/src"/>
 	<buildpathentry kind="src" path="vendor/splitice/radical-basic/src"/>
 	<buildpathentry kind="src" path="vendor/splitice/radical-file/src"/>
 	<buildpathentry kind="src" path="vendor/splitice/radical-net/src"/>
+	<buildpathentry kind="src" path="vendor/bitpay/php-client/tests"/>
 	<buildpathentry kind="src" path="vendor/splitice/radical-html/src"/>
 	<buildpathentry kind="src" path="src"/>
 	<buildpathentry kind="src" path="vendor/symfony/filesystem"/>

@@ -4,7 +4,7 @@ namespace Radical\Utility\Payment;
 abstract class System {
 	protected $module;
 	function __construct($module,$arg = null,$arg2=null){
-		$class = 'Utility\\Payment\\Modules\\'.$module;
+		$class = 'Radical\\Utility\\Payment\\Modules\\'.$module;
 		if(!class_exists($class)){
 			throw new \Exception('Payment module "'.$module.'" doesnt exist');
 		}
@@ -12,11 +12,11 @@ abstract class System {
 	}
 	
 	function bill($ammount){
-		$this->module->bill($ammount);
+		return $this->module->bill($ammount);
 	}
 	
 	function subscribe($ammount){
-		$this->module->subscribe($ammount);
+		return $this->module->subscribe($ammount);
 	}
 	
 	function process(){
