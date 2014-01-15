@@ -2,6 +2,7 @@
 namespace Radical\Utility\Payment;
 
 use Radical\Utility\Payment\Modules\IPaymentModule;
+use Radical\CLI\Output\Log;
 
 /**
  * When dealing with finances its important to log raw 
@@ -12,23 +13,23 @@ use Radical\Utility\Payment\Modules\IPaymentModule;
  *
  */
 class Logging {
-	function __construct($module){
+	private $module;
+	private $log;
+	
+	function __construct($module, $id = null){
 		if($module instanceof IPaymentModule){
 			$module = array_pop(explode('\\',get_class($module)));
 		}
 		$this->module = $module;
-	}
-	
-	function getFileName(){
-		global $BASEPATH;
-		$file = $BASEPATH.'/payment.log';
-		return $file;
+		
+		if($id === null){
+			$id = date('Y-m-d').'_'.time().'_'.$module;
+		}
+		
+		$this->log = Log::create($id,'payments');	
 	}
 	
 	function log($text){
-		$fp = fopen ( $this->getFileName(), 'a' );
-		fwrite ( $fp, '['.$this->module.'] '.$text . "\n\n" );
-		
-		fclose ( $fp ); // close file
+		$this->log->write('['.$this->module.'] '.$text );
 	}
 }
