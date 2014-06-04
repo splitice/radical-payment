@@ -13,6 +13,7 @@ class Order {
 	}
 	
 	function getIdRequired(){
+        //If this gateway doesnt give IDs to transactions, then generate an id
 		if($this->id === null){
 			return time() ^ rand(PHP_INT_MAX*-1, PHP_INT_MAX);
 		}

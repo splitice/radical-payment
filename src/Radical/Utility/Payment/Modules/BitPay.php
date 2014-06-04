@@ -61,9 +61,9 @@ class BitPay implements IPaymentModule {
 			
 			$transaction->gross = $invoice->price;
 			$transaction->fee = 0;
-			$transaction->sender = md5($_SERVER['REMOTE_ADDR']).'@bitpay.com';
+			$transaction->sender = md5($_SERVER['REMOTE_ADDR']).'@client.bitpay.com';
 			
-			$order = new Order($transaction->gross - $transaction->fee);
+			$order = new Order($transaction->gross);
 			
 			list($order->name, $order->item) = explode('|', $invoice->posData);
 			

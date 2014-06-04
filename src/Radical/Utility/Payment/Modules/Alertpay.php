@@ -61,7 +61,7 @@ class Alertpay implements IPaymentModule {
 			$transaction->gross = $this->p->ipn_data ['ap_totalamount'];
 			$transaction->fee = $this->p->ipn_data['ap_feeamount'];
 			
-			$order = new Order($transaction->gross - $transaction->fee);
+			$order = new Order($transaction->gross);
 			$order->name = $this->p->ipn_data['ap_itemname'];
 			$order->item = $this->p->ipn_data['ap_itemcode'];
 			
