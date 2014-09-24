@@ -154,10 +154,6 @@ class Paypal {
 	}
 	
 	function validate_ipn() {
-		
-		// parse the paypal URL
-		$url_parsed = parse_url (  );
-		
 		// generate the post string from the _POST vars aswell as load the
 		// _POST vars into an arry so we can play with them from the calling
 		// script.
@@ -165,7 +161,7 @@ class Paypal {
 		
 
 		// open the connection to paypal
-
+        $this->ipn_data = $_POST;
         $ch = curl_init($this->paypal_url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
@@ -193,7 +189,7 @@ class Paypal {
         curl_close($ch);
 		
 		if (strstr ( $this->ipn_response, "VERIFIED" )) {
-			
+
 			// Valid IPN transaction.
 			$this->log_ipn_results ( true );
 			return true;
