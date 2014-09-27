@@ -66,6 +66,7 @@ class Paypal implements IPaymentModule {
 				$order = new Order($transaction->gross);
 				$order->name = $this->p->ipn_data['item_name'];
 				$order->item = $this->p->ipn_data['item_number'];
+                $order->data = $this->p->ipn_data;
 				
 				$transaction->order = $order;
 				

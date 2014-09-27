@@ -7,6 +7,7 @@ class Order {
 	public $item;
 	public $address;
 	public $id;
+    public $data = array();
 	
 	function __construct($ammount){
 		$this->ammount = $ammount;

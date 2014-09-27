@@ -3,6 +3,10 @@ namespace Radical\Utility\Payment;
 
 class Transaction {
 	public $id;
+
+    /**
+     * @var Order
+     */
 	public $order;
 	public $date;
 	public $sender;
