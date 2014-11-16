@@ -152,24 +152,52 @@ class Paypal {
 		echo "</body></html>\n";
 	
 	}
+
+    function get_postdata(){
+        //https://developer.paypal.com/webapps/developer/docs/classic/ipn/ht_ipn/
+        $raw_post_data = file_get_contents('php://input');
+        $raw_post_array = explode('&', $raw_post_data);
+        $myPost = array();
+        foreach ($raw_post_array as $keyval) {
+            $keyval = explode ('=', $keyval);
+            if (count($keyval) == 2)
+                $myPost[$keyval[0]] = urldecode($keyval[1]);
+        }
+        // read the IPN message sent from PayPal and prepend 'cmd=_notify-validate'
+        $req = 'cmd=_notify-validate';
+        if(function_exists('get_magic_quotes_gpc')) {
+            $get_magic_quotes_exists = true;
+        }
+        foreach ($myPost as $key => $value) {
+            if($get_magic_quotes_exists == true && get_magic_quotes_gpc() == 1) {
+                $value = urlencode(stripslashes($value));
+            } else {
+                $value = urlencode($value);
+            }
+            $req .= "&$key=$value";
+        }
+        return $req;
+    }
 	
 	function validate_ipn() {
 		// generate the post string from the _POST vars aswell as load the
 		// _POST vars into an arry so we can play with them from the calling
 		// script.
-		$post = file_get_contents('php://input').'&cmd=_notify-validate';
-		
+        $req = $this->get_postdata();
 
 		// open the connection to paypal
         $this->ipn_data = $_POST;
         $ch = curl_init($this->paypal_url);
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+        curl_setopt($ch, CURLOPT_FORBID_REUSE, 1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Connection: Close'));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $req);
         $response = curl_exec($ch);
 		if (! $response) {
 			

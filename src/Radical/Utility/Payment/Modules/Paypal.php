@@ -25,7 +25,7 @@ class Paypal implements IPaymentModule {
 		$this->p->add_field ( 'business', $this->account );
 		$this->p->add_field ( 'return', $this->ipn . '?action=success' );
 		$this->p->add_field ( 'cancel_return', $this->ipn . '?action=cancel' );
-		$this->p->add_field ( 'notify_url', $this->ipn . '?action=ipn' );
+		//$this->p->add_field ( 'notify_url', $this->ipn . '?action=ipn' );
 	}
 	private $sandbox;
 	function sandboxed($is){
