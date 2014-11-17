@@ -64,7 +64,7 @@ class Alertpay {
 			echo "<input type=\"hidden\" name=\"$name\" value=\"$value\"/>\n";
 		}
 		echo "<center><br/><br/>If you are not automatically redirected to ";
-		echo "alertpay within 5 seconds...<br/><br/>\n";
+		echo "Payza within 5 seconds...<br/><br/>\n";
 		echo "<input type=\"submit\" value=\"Click Here\"></center>\n";
 		
 		echo "</form>\n";
@@ -74,11 +74,6 @@ class Alertpay {
 	
 	function validate_ipn($security_code) {
 		$log = new Logging('Alertpay');
-		
-		//The value is the url address of IPN V2 handler and the identifier of the token string
-		
-		// get the token from Payza
-		$token = urlencode($_POST['token']);
 		
 		if($_POST['ap_securitycode'] == $security_code){
 			$this->ipn_data = $_POST;
