@@ -7,7 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Symfony\\Component\\Filesystem\\' => array($vendorDir . '/symfony/filesystem'),
-    'Radical' => array($baseDir . '/src', $vendorDir . '/splitice/radical-file/src', $vendorDir . '/splitice/radical-basic/src', $vendorDir . '/splitice/radical-html/src', $vendorDir . '/splitice/radical-common/src', $vendorDir . '/splitice/radical-net/src', $vendorDir . '/splitice/radical-web/src'),
+    'Radical' => array($baseDir . '/src', $vendorDir . '/splitice/radical-common/src', $vendorDir . '/splitice/radical-errorhandling/src', $vendorDir . '/splitice/radical-file/src', $vendorDir . '/splitice/radical-basic/src', $vendorDir . '/splitice/radical-net/src', $vendorDir . '/splitice/radical-html/src', $vendorDir . '/splitice/radical-web/src'),
     'BitPay\\Tests' => array($vendorDir . '/bitpay/php-client/tests'),
     'BitPay' => array($vendorDir . '/bitpay/php-client/src'),
 );

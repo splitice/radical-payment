@@ -14,7 +14,7 @@
 		"php" : ">=5.4",
 		"splitice/radical-common" : "dev-master",
 		"splitice/radical-web" : "dev-master",
-		"bitpay/php-client" : "dev-master"
+        "bitpay/php-client" : "dev-master"
 	},
 	"repositories" : [{
 			"type" : "git",
