@@ -139,6 +139,6 @@ class Order implements IOrder
 	}
 
     function setId($id){
-        $this->id = id;
+        $this->id = $id;
     }
 }

@@ -26,7 +26,10 @@ class Paypal implements IPaymentModule {
 		$this->client->add_field ( 'business', $account );
 	}
 
-	function sandboxed($is){
+	function sandboxed($is = null){
+        if($is === null){
+            return $this->sandbox;
+        }
 		$this->sandbox = $is;
 		if($is)
 			$this->client->paypal_url = self::SANDBOX_URL;

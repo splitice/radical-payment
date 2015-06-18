@@ -17,6 +17,6 @@ class StandardWebInterface implements IWebInterface {
         return $base.'action='.urlencode($action);
     }
     function payment_get_action(){
-        return $_GET['action'];
+        return isset($_GET['action'])?$_GET['action']:null;
     }
 }
