@@ -4,11 +4,11 @@ namespace Radical\Payment\Modules;
 use Radical\Payment\Components\IOrder;
 use Radical\Payment\Components\Order;
 use Radical\Payment\Components\Transaction;
+use Radical\Payment\External;
 use Radical\Payment\Messages\FundsReturnMessage;
 use Radical\Payment\Messages\PaymentCompleteMessage;
 use Radical\Payment\Messages\ReversalMessage;
 use Radical\Payment\Messages\TransactionMessage;
-use Radical\Payment\External;
 use Radical\Payment\WebInterface\StandardWebInterface;
 
 class Paypal implements IPaymentModule {

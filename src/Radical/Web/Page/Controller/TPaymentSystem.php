@@ -5,7 +5,6 @@ use Radical\Payment\Components\IOrder;
 use Radical\Payment\Messages\IPaymentMessage;
 use Radical\Payment\Modules\IPaymentModule;
 use Radical\Payment\WebInterface\StandardWebInterface;
-use X4B\Web\Page\Controller\Special\FileNotFound;
 
 trait TPaymentSystem {
     protected abstract function payment_handle(IPaymentMessage $message);
