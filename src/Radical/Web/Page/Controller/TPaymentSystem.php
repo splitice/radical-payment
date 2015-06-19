@@ -15,15 +15,19 @@ trait TPaymentSystem {
         if(is_object($ret) && $ret instanceof IPaymentMessage){
             return $this->payment_handle($ret);
         }
-        return $ret;
+        return 'error';
     }
 
     function payment_action(IPaymentModule $system, StandardWebInterface $web){
         $action = $web->payment_get_action();
         switch($action) {
             case 'ipn':
-                return $system->ipn();
-            case 'successs':
+                $msg = $system->ipn();
+                if($msg){
+                    return $this->payment_handle($msg);
+                }
+                return 'ipn_error';
+            case 'success':
             case 'cancel':
                 return $action;
             default:
