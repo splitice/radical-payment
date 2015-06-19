@@ -20,7 +20,10 @@ class Alertpay implements IPaymentModule {
 		
 		$this->client->add_field ( 'ap_merchant', $account );
 	}
-	function sandboxed($is){
+	function sandboxed($is=null){
+        if($is===null){
+            return $this->sandbox;
+        }
 		$this->sandbox = $is;
 		if($is){
 			$this->client->url = External\Alertpay::URL_SANDBOX;

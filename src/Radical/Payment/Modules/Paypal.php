@@ -78,6 +78,8 @@ class Paypal implements IPaymentModule {
                 } elseif($payment_status == 'Canceled_Reversal'){
                     return new FundsReturnMessage('', $transaction);
                 }
+            }else{
+                echo "Unknown message: " . $data['payment_status'];
             }
         }
 

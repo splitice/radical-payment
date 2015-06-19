@@ -255,8 +255,8 @@ class Paypal {
 		// Log the response from the paypal server
 		$text .= "\nIPN Response from Paypal Server:\n " . $this->ipn_response;
 		
-		$log = new Logging('Paypal');
-		$log->log($text);
+		//$log = new Logging('Paypal');
+		//$log->log($text);
 	}
 }         
 
