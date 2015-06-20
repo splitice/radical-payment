@@ -5,6 +5,7 @@ use Radical\Payment\Components\IOrder;
 use Radical\Payment\Components\Order;
 use Radical\Payment\Components\Transaction;
 use Radical\Payment\Messages\IPNErrorMessage;
+use Radical\Payment\Messages\PaymentCompleteMessage;
 use Radical\Payment\WebInterface\StandardWebInterface;
 use Radical\Web\Page\Controller\Special\Redirect;
 
@@ -63,10 +64,10 @@ class BitPay implements IPaymentModule {
 
 			$transaction->order = $order;
 			
-			return $transaction;
+			return new PaymentCompleteMessage($transaction);
 		}
 		
 		//A message that we dont care about
-		return true;
+		return null;
 	}
 }

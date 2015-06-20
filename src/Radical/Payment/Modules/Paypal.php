@@ -84,7 +84,7 @@ class Paypal implements IPaymentModule {
         }
 
         //A message that we dont care about
-        return true;
+        return null;
     }
 
 	function ipn(){

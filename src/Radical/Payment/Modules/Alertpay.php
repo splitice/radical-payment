@@ -77,7 +77,7 @@ class Alertpay implements IPaymentModule {
         }
 
         //A message that we dont care about
-        return true;
+        return null;
     }
 
     //header('X-Error: IPN Validation',true,500);
