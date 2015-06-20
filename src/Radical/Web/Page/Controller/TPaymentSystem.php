@@ -14,7 +14,7 @@ trait TPaymentSystem {
         if(is_object($ret) && $ret instanceof IPaymentMessage){
             return $this->payment_handle($ret);
         }
-        return 'error';
+        return $ret;
     }
 
     function payment_action(IPaymentModule $system, StandardWebInterface $web){

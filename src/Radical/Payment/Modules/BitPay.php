@@ -6,6 +6,7 @@ use Radical\Payment\Components\Order;
 use Radical\Payment\Components\Transaction;
 use Radical\Payment\Messages\IPNErrorMessage;
 use Radical\Payment\WebInterface\StandardWebInterface;
+use Radical\Web\Page\Controller\Special\Redirect;
 
 class BitPay implements IPaymentModule {
 	protected $bitPay;
@@ -33,7 +34,8 @@ class BitPay implements IPaymentModule {
 
 		$pos_data = implode('|',array($order->getName(),$order->getItem()));
 		
-		return $this->bitPay->createInvoice($order->getId(), $order->getAmmount(), $pos_data, $options);
+		$invoice = $this->bitPay->createInvoice($order->getId(), $order->getAmmount(), $pos_data, $options);
+        return new Redirect($invoice->url);
 	}
 	function ipn(){
 		$post_data = file_get_contents("php://input");
