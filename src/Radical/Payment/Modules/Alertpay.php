@@ -66,7 +66,7 @@ class Alertpay implements IPaymentModule {
                 $transaction->order = $order;
 
                 $payment_status = $data['ap_transactionstate'];
-                if($payment_status == 'Completed') {
+                if($data['ap_notificationtype'] == 'New' && ($payment_status == 'Completed' || $payment_status == 'On Hold')) {
                     return new PaymentCompleteMessage($transaction);
                 } elseif($payment_status == 'Reversed') {
                     return new ReversalMessage('',$transaction);

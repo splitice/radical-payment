@@ -72,8 +72,7 @@ class Alertpay {
 	}
 	
 	function validate_ipn($security_code) {
-		$log = new Logging('Alertpay');
-		
+		//$log = new Logging('Alertpay');
 		if($_POST['ap_securitycode'] == $security_code){
 			$this->ipn_data = $_POST;
 			return true;
