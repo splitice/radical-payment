@@ -47,6 +47,8 @@ class Paypal implements IPaymentModule {
 		if($order->getItem())
 			$this->client->add_field ('item_number', $order->getItem() );
 
+        $this->client->add_field('custom',$_SERVER['REMOTE_ADDR']);
+
         //todo iterate extra
         $this->client->add_field ('noshipping', 1 );
 		
@@ -62,6 +64,13 @@ class Paypal implements IPaymentModule {
                 $transaction->gross = $data ['mc_gross'];
                 $transaction->fee = $data['mc_fee'];
                 $transaction->sender = $data['payer_email'];
+
+                $transaction->name = $data['first_name'] . ' ' . $data['last_name'];
+                $transaction->ip = $data['custom'];
+
+                $transaction->address = array(
+                    'country_code'=>$data['address_country_code']
+                );
 
                 $order = new Order($transaction->gross);
                 $order->setName($data['item_name']);

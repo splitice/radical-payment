@@ -45,7 +45,9 @@ class Alertpay implements IPaymentModule {
 		
 		if($order->getItem())
 			$this->client->add_field ('ap_itemcode', $order->getItem() );
-		
+
+        $this->client->add_field('apc_1', $_SERVER['REMOTE_ADDR']);
+
 		$this->client->submit ();
 	}
 
@@ -57,6 +59,13 @@ class Alertpay implements IPaymentModule {
 
                 $transaction->gross = $data ['ap_totalamount'];
                 $transaction->fee = $data['ap_feeamount'];
+
+                $transaction->name = $data['ap_custfirstname'] . ' ' . $data['ap_custlastname'];
+                $transaction->ip = $data['apc_1'];
+
+                $transaction->address = array(
+                    'country_code'=>$data['ap_custcountry']
+                );
 
                 $order = new Order($transaction->gross);
                 $order->setName($data['ap_itemname']);

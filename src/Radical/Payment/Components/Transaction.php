@@ -14,5 +14,10 @@ class Transaction {
 	public $gross;
 	public $fee;
 
+    public $ip;
+    public $name;
+
+    public $address = array();
+
     public $sandbox;
 }

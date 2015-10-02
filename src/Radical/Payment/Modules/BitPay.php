@@ -16,7 +16,7 @@ class BitPay implements IPaymentModule {
 		$options = array();
 		$options['currency'] = 'USD';
 		$options['physical'] = 'false';
-		$options['transactionSpeed'] = 'high';
+		$options['transactionSpeed'] = 'medium';
 
 		
 		$this->bitPay = new \BitPay\BitPay(
