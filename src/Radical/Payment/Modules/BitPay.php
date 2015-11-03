@@ -12,12 +12,11 @@ use Radical\Web\Page\Controller\Special\Redirect;
 class BitPay implements IPaymentModule {
 	protected $bitPay;
 	
-	function __construct($account){
+	function __construct($account, $transactionSpeed = 'high'){
 		$options = array();
 		$options['currency'] = 'USD';
 		$options['physical'] = 'false';
-		$options['transactionSpeed'] = 'medium';
-
+		$options['transactionSpeed'] = $transactionSpeed;
 		
 		$this->bitPay = new \BitPay\BitPay(
 				new \BitPay\Request\Curl,
