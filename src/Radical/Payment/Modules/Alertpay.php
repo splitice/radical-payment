@@ -62,6 +62,7 @@ class Alertpay implements IPaymentModule {
 
                 $transaction->name = $data['ap_custfirstname'] . ' ' . $data['ap_custlastname'];
                 $transaction->ip = $data['apc_1'];
+				$transaction->sender = $data['ap_custemailaddress'];
 
                 $transaction->address = array(
                     'country_code'=>$data['ap_custcountry']
