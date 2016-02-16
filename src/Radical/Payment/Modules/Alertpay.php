@@ -1,5 +1,6 @@
 <?php
 namespace Radical\Payment\Modules;
+use Radical\Payment\Components\Customer;
 use Radical\Payment\Components\IOrder;
 use Radical\Payment\Components\Order;
 use Radical\Payment\Components\Transaction;
@@ -60,13 +61,16 @@ class Alertpay implements IPaymentModule {
                 $transaction->gross = $data ['ap_totalamount'];
                 $transaction->fee = $data['ap_feeamount'];
 
-                $transaction->name = $data['ap_custfirstname'] . ' ' . $data['ap_custlastname'];
-                $transaction->ip = $data['apc_1'];
-				$transaction->sender = $data['ap_custemailaddress'];
-
-                $transaction->address = array(
-                    'country_code'=>$data['ap_custcountry']
-                );
+				$transaction->sender = new Customer($data['ap_custemailaddress']);
+				$transaction->sender->email = $data['ap_custemailaddress'];
+				$transaction->sender->name = $data['ap_custfirstname'] . ' ' . $data['ap_custlastname'];
+				$transaction->sender->businessName = null;
+				$transaction->sender->ip = $data['apc_1'];
+				$transaction->sender->address->street = $data['ap_custaddress'];
+				$transaction->sender->address->postcode = $data['ap_custzip'];
+				$transaction->sender->address->state = $data['ap_custstate'];
+				$transaction->sender->address->city = $data['ap_custcity'];
+				$transaction->sender->address->country = $data['ap_custcountry'];
 
                 $order = new Order($transaction->gross);
                 $order->setName($data['ap_itemname']);

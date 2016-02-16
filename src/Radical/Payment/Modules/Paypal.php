@@ -1,6 +1,8 @@
 <?php
 namespace Radical\Payment\Modules;
 
+use Radical\Payment\Components\Address;
+use Radical\Payment\Components\Customer;
 use Radical\Payment\Components\IOrder;
 use Radical\Payment\Components\Order;
 use Radical\Payment\Components\Transaction;
@@ -63,14 +65,18 @@ class Paypal implements IPaymentModule {
 
                 $transaction->gross = $data ['mc_gross'];
                 $transaction->fee = $data['mc_fee'];
-                $transaction->sender = $data['payer_email'];
 
-                $transaction->name = $data['first_name'] . ' ' . $data['last_name'];
-                $transaction->ip = $data['custom'];
-
-                $transaction->address = array(
-                    'country_code'=>$data['address_country_code']
-                );
+				$transaction->sender = new Customer($data['payer_email']);
+				$transaction->sender->name = $data['first_name'] . ' ' . $data['last_name'];
+				$transaction->sender->businessName = empty($data['payer_business_name'])?null:$data['payer_business_name'];
+				$transaction->sender->ip = $data['custom'];
+				$transaction->sender->email = $data['payer_email'];
+				$transaction->sender->contactPhone = empty($data['contact_phone'])?null:$data['contact_phone'];
+				$transaction->sender->address->street = $data['address_street'];
+				$transaction->sender->address->postcode = $data['address_zip'];
+				$transaction->sender->address->state = $data['address_state'];
+				$transaction->sender->address->city = $data['address_city'];
+				$transaction->sender->address->country = $data['address_country_code'];
 
                 $order = new Order($transaction->gross);
                 $order->setName($data['item_name']);
@@ -101,5 +107,9 @@ class Paypal implements IPaymentModule {
             $data = $this->client->ipn_data;
 			return $this->handle_validated_ipn($data);
 		}
+	}
+
+	function test_ipn($data){
+		return $this->handle_validated_ipn($data);
 	}
 }

@@ -9,15 +9,14 @@ class Transaction {
      */
 	public $order;
 	public $date;
+
+	/** @var Customer|null */
 	public $sender;
 	
 	public $gross;
 	public $fee;
 
     public $ip;
-    public $name;
-
-    public $address = array();
 
     public $sandbox;
 }

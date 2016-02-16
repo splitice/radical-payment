@@ -1,6 +1,4 @@
 <?php
-
-
 namespace Radical\Payment\Messages;
 
 
