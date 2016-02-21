@@ -3,6 +3,7 @@ namespace Radical\Web\Page\Controller;
 
 use Radical\Payment\Components\IOrder;
 use Radical\Payment\Messages\IPaymentMessage;
+use Radical\Payment\Messages\IPNErrorMessage;
 use Radical\Payment\Modules\IPaymentModule;
 use Radical\Payment\WebInterface\StandardWebInterface;
 use Radical\Web\Page\Controller\Special\FileNotFound;
@@ -22,7 +23,11 @@ trait TPaymentSystem {
         $action = $web->payment_get_action();
         switch($action) {
             case 'ipn':
-                $msg = $system->ipn();
+                try {
+                    $msg = $system->ipn();
+                }catch(\Exception $ex){
+                    $msg = new IPNErrorMessage($ex->getMessage());
+                }
                 if($msg){
                     return $this->payment_handle($msg);
                 }

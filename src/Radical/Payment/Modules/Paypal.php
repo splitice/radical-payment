@@ -8,6 +8,7 @@ use Radical\Payment\Components\Order;
 use Radical\Payment\Components\Transaction;
 use Radical\Payment\External;
 use Radical\Payment\Messages\FundsReturnMessage;
+use Radical\Payment\Messages\IPNErrorMessage;
 use Radical\Payment\Messages\PaymentCompleteMessage;
 use Radical\Payment\Messages\ReversalMessage;
 use Radical\Payment\Messages\TransactionMessage;
@@ -94,7 +95,7 @@ class Paypal implements IPaymentModule {
                     return new FundsReturnMessage('', $transaction);
                 }
             }else{
-                echo "Unknown message: " . $data['payment_status'];
+				return new IPNErrorMessage("Unknown message: " . $data['payment_status']);
             }
         }
 
