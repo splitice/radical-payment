@@ -47,7 +47,7 @@ class BitPay implements IPaymentModule {
 		}
 		
 		//Check the status
-		if($invoice->status == 'confirmed') {
+		if($invoice->status == 'confirmed' || $invoice->status == 'complete') {
 			$transaction = new Transaction();
 			$transaction->id = $invoice->id;
 			
