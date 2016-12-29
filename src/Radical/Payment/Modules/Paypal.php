@@ -9,22 +9,26 @@ use Radical\Payment\Components\Transaction;
 use Radical\Payment\External;
 use Radical\Payment\Messages\FundsReturnMessage;
 use Radical\Payment\Messages\IPNErrorMessage;
+use Radical\Payment\Messages\NoHandleMessage;
 use Radical\Payment\Messages\PaymentCompleteMessage;
+use Radical\Payment\Messages\RecurringPaymentCancelled;
 use Radical\Payment\Messages\ReversalMessage;
 use Radical\Payment\Messages\TransactionMessage;
 use Radical\Payment\WebInterface\StandardWebInterface;
 
 class Paypal implements IPaymentModule {
-	const SANDBOX_URL = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
+	const SANDBOX_URL = 'https://sandbox.paypal.com/cgi-bin/webscr';
 
-    private $sandbox;
+    private $sandbox = false;
 	protected $client;
 	
-	function __construct($account){
+	function __construct($account, $sandbox = false){
 		$this->client = new External\Paypal();
 		
-		if($this->sandbox)
+		if($sandbox) {
 			$this->client->paypal_url = self::SANDBOX_URL;
+			$this->sandbox = true;
+		}
 		
 		$this->client->add_field ( 'business', $account );
 	}
@@ -59,54 +63,95 @@ class Paypal implements IPaymentModule {
 	}
 
     private function handle_validated_ipn($data){
-        if(isset($data['payment_status'])){
-            if($data['payment_status'] == 'Completed' || $data['payment_status'] == 'Reversed' || $data['payment_status'] == 'Canceled_Reversal'){
-                $transaction = new Transaction();
-                $transaction->id = $data['txn_id'];
+		$payment_status = null;
 
-                $transaction->gross = $data ['mc_gross'];
-                $transaction->fee = $data['mc_fee'];
+		if($data['txn_type'] == 'recurring_payment_profile_cancel') {
+			return new RecurringPaymentCancelled($data['recurring_payment_id']);
+		}
+
+		if(isset($data['initial_payment_status'])){
+			$payment_status = $data['initial_payment_status'];
+			$payment_ammount = $data['initial_payment_amount'];
+			$txn_id = $data['initial_payment_txn_id'];
+
+
+			$order = new Order($payment_ammount);
+			$order->setName($data['product_name']);
+			$order->setItem($data['recurring_payment_id']);
+			$order->setRecurring(true);
+		}
+        if(isset($data['payment_status'])) {
+			$payment_status = $data['payment_status'];
+			$payment_ammount = $data['mc_gross'];
+			$txn_id = $data['txn_id'];
+
+			$order = new Order($payment_ammount);
+			if(isset($data['recurring_payment_id'])){
+				$order->setName($data['product_name']);
+				$order->setItem($data['recurring_payment_id']);
+				$order->setRecurring(true);
+			}else {
+				$order->setName($data['item_name']);
+				$order->setItem($data['item_number']);
+				$order->setRecurring(false);
+			}
+		}
+
+		if($payment_status){
+            if($payment_status == 'Completed' || $payment_status == 'Reversed' || $payment_status == 'Canceled_Reversal'){
+                $transaction = new Transaction();
+                $transaction->id = $txn_id;
+
+                $transaction->gross = $payment_ammount;
+                if(isset($data['mc_fee'])) {
+					$transaction->fee = $data['mc_fee'];
+				}
 
 				$transaction->sender = new Customer($data['payer_email']);
 				$transaction->sender->name = $data['first_name'] . ' ' . $data['last_name'];
 				$transaction->sender->businessName = empty($data['payer_business_name'])?null:$data['payer_business_name'];
-				$transaction->sender->ip = $data['custom'];
+				if(isset($data['custom'])) {
+					$transaction->sender->ip = $data['custom'];
+				}
 				$transaction->sender->email = $data['payer_email'];
 				$transaction->sender->contactPhone = empty($data['contact_phone'])?null:$data['contact_phone'];
-				$transaction->sender->address->street = $data['address_street'];
-				$transaction->sender->address->postcode = $data['address_zip'];
-				$transaction->sender->address->state = $data['address_state'];
-				$transaction->sender->address->city = $data['address_city'];
-				$transaction->sender->address->country = $data['address_country_code'];
 
-                $order = new Order($transaction->gross);
-                $order->setName($data['item_name']);
-                $order->setItem($data['item_number']);
+
+				if(isset($data['payment_status'])) {
+					$transaction->sender->address->street = $data['address_street'];
+					$transaction->sender->address->postcode = $data['address_zip'];
+					$transaction->sender->address->state = $data['address_state'];
+					$transaction->sender->address->city = $data['address_city'];
+					$transaction->sender->address->country = $data['address_country_code'];
+				}
+
                 $order->additional = $data;
 
                 $transaction->order = $order;
 
-                $payment_status = $data['payment_status'];
-                if($data['payment_status'] == 'Completed') {
+                if($payment_status == 'Completed') {
                     return new PaymentCompleteMessage($transaction);
                 } elseif($payment_status == 'Reversed') {
                     return new ReversalMessage('',$transaction);
                 } elseif($payment_status == 'Canceled_Reversal'){
                     return new FundsReturnMessage('', $transaction);
                 }
+                return new NoHandleMessage();
             }else{
 				return new IPNErrorMessage("Unknown message: " . $data['payment_status']);
             }
         }
 
         //A message that we dont care about
-        return null;
+        return new NoHandleMessage();
     }
 
 	function ipn(){
 		if ($this->client->validate_ipn ()){
             $data = $this->client->ipn_data;
 			return $this->handle_validated_ipn($data);
+		}else{
+			return new IPNErrorMessage("Unable to validate");
 		}
 	}
 

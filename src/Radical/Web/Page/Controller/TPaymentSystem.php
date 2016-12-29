@@ -30,7 +30,9 @@ trait TPaymentSystem {
                 }
                 if($msg){
                     return $this->payment_handle($msg);
-                }
+                }else{
+					header("X-IPN-Error: YES", true, 500);
+				}
                 return 'ipn_error';
             case 'success':
             case 'cancel':

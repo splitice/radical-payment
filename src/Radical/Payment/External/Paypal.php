@@ -16,16 +16,16 @@ namespace Radical\Payment\External;
  * NOT intended to make the paypal integration "plug 'n' play". It still
  * requires the developer (that should be you) to understand the paypal
  * process and know the variables you want/need to pass to paypal to
- * achieve what you want.  
+ * achieve what you want.
  *
  * This class handles the submission of an order to paypal aswell as the
  * processing an Instant Payment Notification.
- * 
+ *
  * This code is based on that of the php-toolkit from paypal.  I've taken
  * the basic principals and put it in to a class so that it is a little
  * easier--at least for me--to use.  The php-toolkit can be downloaded from
  * http://sourceforge.net/projects/paypal.
- * 
+ *
  * To submit an order to paypal, have your order form POST to a file with:
  *
  * $p = new paypal_class;
@@ -45,92 +45,92 @@ namespace Radical\Payment\External;
  * In case you are new to paypal, here is some information to help you:
  *
  * 1. Download and read the Merchant User Manual and Integration Guide from
- * http://www.paypal.com/en_US/pdf/integration_guide.pdf.  This gives 
+ * http://www.paypal.com/en_US/pdf/integration_guide.pdf.  This gives
  * you all the information you need including the fields you can pass to
  * paypal (using add_field() with this class) aswell as all the fields
  * that are returned in an IPN post (stored in the ipn_data() array in
  * this class).  It also diagrams the entire transaction process.
  *
  * 2. Create a "sandbox" account for a buyer and a seller.  This is just
- * a test account(s) that allow you to test your site from both the 
+ * a test account(s) that allow you to test your site from both the
  * seller and buyer perspective.  The instructions for this is available
  * at https://developer.paypal.com/ as well as a great forum where you
  * can ask all your paypal integration questions.  Make sure you follow
  * all the directions in setting up a sandbox test environment, including
  * the addition of fake bank accounts and credit cards.
- * 
+ *
  *******************************************************************************
  */
 
 class Paypal {
-	
+
 	var $last_error; // holds the last error encountered
-	
+
 
 	var $ipn_log; // bool: log IPN results to text file?
-	
+
 
 	var $ipn_log_file; // filename of the IPN log
-	var $ipn_response; // holds the IPN response from paypal   
+	var $ipn_response; // holds the IPN response from paypal
 	var $ipn_data = array (); // array contains the POST values for IPN
-	
+
 
 	var $fields = array (); // array holds the fields to submit to paypal
-	
+
 
 	function __construct() {
-		
+
 		// initialization constructor.  Called when class is created.
-		
+
 
 		$this->paypal_url = 'https://www.paypal.com/cgi-bin/webscr';
-		
+
 		$this->last_error = '';
-		
+
 		$this->ipn_log_file = '.ipn_results.log';
 		$this->ipn_log = true;
 		$this->ipn_response = '';
-		
+
 		// populate $fields array with a few default values.  See the paypal
 		// documentation for a list of fields and their data types. These defaul
 		// values can be overwritten by the calling script.
-		
+
 
 		$this->add_field ( 'rm', '2' ); // Return method = POST
 		$this->add_field ( 'cmd', '_xclick' );
         $this->add_field ( 'charset', 'utf-8' );
-	
+
 	}
-	
+
 	function add_field($field, $value) {
-		
-		// adds a key=>value pair to the fields array, which is what will be 
-		// sent to paypal as POST variables.  If the value is already in the 
+
+		// adds a key=>value pair to the fields array, which is what will be
+		// sent to paypal as POST variables.  If the value is already in the
 		// array, it will be overwritten.
-		
+
 
 		$this->fields [$field] = $value;
 	}
-	
+
 	function submit(){
 		return $this->submit_paypal_post();
 	}
-	
+
 	function submit_paypal_post() {
-		
+
 		// this function actually generates an entire HTML page consisting of
-		// a form with hidden elements which is submitted to paypal via the 
+		// a form with hidden elements which is submitted to paypal via the
 		// BODY element's onLoad attribute.  We do this so that you can validate
-		// any POST vars from you custom form before submitting to paypal.  So 
+		// any POST vars from you custom form before submitting to paypal.  So
 		// basically, you'll have your own form which is submitted to your script
 		// to validate the data, which in turn calls this function to create
 		// another hidden form and submit to paypal.
-		
+
 
 		// The user will briefly see a message on the screen that reads:
 		// "Please wait, your order is being processed..." and then immediately
 		// is redirected to paypal.
-		
+
 
 		echo "<html>\n";
 		echo "<head><title>Processing Payment...</title></head>\n";
@@ -139,17 +139,17 @@ class Paypal {
 		echo " will be redirected to the paypal website.</h2></center>\n";
 		echo "<form method=\"post\" name=\"paypal_form\" ";
 		echo "action=\"" . $this->paypal_url . "\">\n";
-		
+
 		foreach ( $this->fields as $name => $value ) {
 			echo "<input type=\"hidden\" name=\"$name\" value=\"$value\"/>\n";
 		}
 		echo "<center><br/><br/>If you are not automatically redirected to ";
 		echo "paypal within 5 seconds...<br/><br/>\n";
 		echo "<input type=\"submit\" value=\"Click Here\"></center>\n";
-		
+
 		echo "</form>\n";
 		echo "</body></html>\n";
-	
+
 	}
 
     function get_postdata(){
@@ -177,7 +177,7 @@ class Paypal {
         }
         return $req;
     }
-	
+
 	function validate_ipn() {
 		// generate the post string from the _POST vars aswell as load the
 		// _POST vars into an arry so we can play with them from the calling
@@ -199,7 +199,7 @@ class Paypal {
         curl_setopt($ch, CURLOPT_POSTFIELDS, $req);
         $response = curl_exec($ch);
 		if (! $response) {
-			
+
 			// could not open the connection.  If loggin is on, the error message
 			// will be in the log.
 			$this->last_error = "error verifying with paypal: ".curl_error($ch);

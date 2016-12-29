@@ -38,6 +38,13 @@ class Order implements IOrder
      */
     private $id;
 
+	/**
+	 * Is Recurring?
+	 *
+	 * @var bool
+	 */
+    private $recurring = false;
+
     /**
      * Additional Data
      *
@@ -141,4 +148,22 @@ class Order implements IOrder
     function setId($id){
         $this->id = $id;
     }
+
+	/**
+	 * @return bool
+	 */
+	public function isRecurring()
+	{
+		return $this->recurring;
+	}
+
+	/**
+	 * @param bool $recurring
+	 */
+	public function setRecurring($recurring)
+	{
+		$this->recurring = $recurring;
+	}
+
+
 }
