@@ -62,13 +62,7 @@ class Paypal implements IPaymentModule {
 		$this->client->submit_paypal_post ();
 	}
 
-    private function handle_validated_ipn($data){
-		$payment_status = null;
-
-		if($data['txn_type'] == 'recurring_payment_profile_cancel') {
-			return new RecurringPaymentCancelled($data['recurring_payment_id']);
-		}
-
+	private function handle_as_purchase($data){
 		if(isset($data['initial_payment_status'])){
 			$payment_status = $data['initial_payment_status'];
 			$payment_ammount = $data['initial_payment_amount'];
@@ -80,7 +74,7 @@ class Paypal implements IPaymentModule {
 			$order->setItem($data['recurring_payment_id']);
 			$order->setRecurring(true);
 		}
-        if(isset($data['payment_status'])) {
+		if(isset($data['payment_status'])) {
 			$payment_status = $data['payment_status'];
 			$payment_ammount = $data['mc_gross'];
 			$txn_id = $data['txn_id'];
@@ -97,27 +91,27 @@ class Paypal implements IPaymentModule {
 			}
 		}
 
-		if($payment_status){
-            if($payment_status == 'Completed' || $payment_status == 'Reversed' || $payment_status == 'Canceled_Reversal'){
-                $transaction = new Transaction();
-                $transaction->id = $txn_id;
+		if($payment_status) {
+			if ($payment_status == 'Completed' || $payment_status == 'Reversed' || $payment_status == 'Canceled_Reversal') {
+				$transaction = new Transaction();
+				$transaction->id = $txn_id;
 
-                $transaction->gross = $payment_ammount;
-                if(isset($data['mc_fee'])) {
+				$transaction->gross = $payment_ammount;
+				if (isset($data['mc_fee'])) {
 					$transaction->fee = $data['mc_fee'];
 				}
 
 				$transaction->sender = new Customer($data['payer_email']);
 				$transaction->sender->name = $data['first_name'] . ' ' . $data['last_name'];
-				$transaction->sender->businessName = empty($data['payer_business_name'])?null:$data['payer_business_name'];
-				if(isset($data['custom'])) {
+				$transaction->sender->businessName = empty($data['payer_business_name']) ? null : $data['payer_business_name'];
+				if (isset($data['custom'])) {
 					$transaction->sender->ip = $data['custom'];
 				}
 				$transaction->sender->email = $data['payer_email'];
-				$transaction->sender->contactPhone = empty($data['contact_phone'])?null:$data['contact_phone'];
+				$transaction->sender->contactPhone = empty($data['contact_phone']) ? null : $data['contact_phone'];
 
 
-				if(isset($data['payment_status'])) {
+				if (isset($data['payment_status'])) {
 					$transaction->sender->address->street = $data['address_street'];
 					$transaction->sender->address->postcode = $data['address_zip'];
 					$transaction->sender->address->state = $data['address_state'];
@@ -125,22 +119,55 @@ class Paypal implements IPaymentModule {
 					$transaction->sender->address->country = $data['address_country_code'];
 				}
 
-                $order->additional = $data;
+				$order->additional = $data;
 
-                $transaction->order = $order;
+				$transaction->order = $order;
 
-                if($payment_status == 'Completed') {
-                    return new PaymentCompleteMessage($transaction);
-                } elseif($payment_status == 'Reversed') {
-                    return new ReversalMessage('',$transaction);
-                } elseif($payment_status == 'Canceled_Reversal'){
-                    return new FundsReturnMessage('', $transaction);
-                }
-                return new NoHandleMessage();
-            }else{
+				if ($payment_status == 'Completed') {
+					return new PaymentCompleteMessage($transaction);
+				} elseif ($payment_status == 'Reversed') {
+					$transaction->gross += $transaction->fee;//results in negative value!
+					return new ReversalMessage('', $transaction);
+				} elseif ($payment_status == 'Canceled_Reversal') {
+					$transaction->gross += $transaction->fee;
+					return new FundsReturnMessage('', $transaction);
+				}
+				return new NoHandleMessage();
+			} else {
 				return new IPNErrorMessage("Unknown message: " . $data['payment_status']);
-            }
-        }
+			}
+		}
+	}
+
+    private function handle_validated_ipn($data){
+		$payment_status = null;
+
+		if(!empty($data['txn_type'])) {
+			switch ($data['txn_type']) {
+				case 'new_case':
+					$transaction = new Transaction();
+					$transaction->id = $data['txn_id'];
+
+					return new ReversalMessage('', $transaction);
+				case 'recurring_payment_profile_cancel':
+					return new RecurringPaymentCancelled($data['recurring_payment_id']);
+				case 'recurring_payment':
+				case 'recurring_payment_profile_created':
+				case 'subscr_payment':
+				case 'web_accept':
+				case 'express_checkout':
+				case 'merch_pmt':
+					$ret = $this->handle_as_purchase($data);
+					if ($ret) {
+						return $ret;
+					}
+			}
+		}else{
+			$ret = $this->handle_as_purchase($data);
+			if ($ret) {
+				return $ret;
+			}
+		}
 
         //A message that we dont care about
         return new NoHandleMessage();
