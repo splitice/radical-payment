@@ -51,6 +51,24 @@ class Order implements IOrder
      * @var array
      */
     public $additional = array();
+
+    private $tax = 0;
+
+    /**
+     * @return int
+     */
+    public function getTax()
+    {
+        return $this->tax;
+    }
+
+    /**
+     * @param int $tax
+     */
+    public function setTax(int $tax)
+    {
+        $this->tax = $tax;
+    }
 	
 	function __construct($ammount){
 		$this->ammount = $ammount;

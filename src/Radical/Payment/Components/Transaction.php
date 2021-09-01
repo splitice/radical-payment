@@ -15,6 +15,7 @@ class Transaction {
 	
 	public $gross;
 	public $fee;
+	public $tax;
 
     public $ip;
 

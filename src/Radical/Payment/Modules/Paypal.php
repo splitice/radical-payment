@@ -48,8 +48,14 @@ class Paypal implements IPaymentModule {
 
 		if($order->getName())
 			$this->client->add_field ( 'item_name', $order->getName() );
-		
-		$this->client->add_field ( 'amount', $order->getAmmount() );
+
+		$total_amt = $order->getAmmount();
+		$this->client->add_field ( 'amount',  $total_amt);
+
+		$tax = (float)$order->getTax();
+		if($tax) {
+            $this->client->add_field('tax', number_format($tax, 2));
+        }
 		
 		if($order->getItem())
 			$this->client->add_field ('item_number', $order->getItem() );
@@ -73,8 +79,9 @@ class Paypal implements IPaymentModule {
 			$order->setName($data['product_name']);
 			$order->setItem($data['recurring_payment_id']);
 			$order->setRecurring(true);
-		}
-		if(isset($data['payment_status'])) {
+			$order->setCurrency($data['mc_currency']);
+			if(!empty($data['tax'])) $order->setTax((float)$data['tax']);
+		} else if(isset($data['payment_status'])) {
 			$payment_status = $data['payment_status'];
 			$payment_ammount = $data['mc_gross'];
 			$txn_id = $data['txn_id'];
@@ -84,12 +91,16 @@ class Paypal implements IPaymentModule {
 				$order->setName($data['product_name']);
 				$order->setItem($data['recurring_payment_id']);
 				$order->setRecurring(true);
-			}else {
+			} else {
 				$order->setName($data['item_name']);
 				$order->setItem($data['item_number']);
 				$order->setRecurring(false);
 			}
-		}
+            $order->setCurrency($data['mc_currency']);
+            if(!empty($data['tax'])) $order->setTax((float)$data['tax']);
+		} else{
+            return new IPNErrorMessage("Unknown status");
+        }
 
 		if($payment_status) {
 			if ($payment_status == 'Completed' || $payment_status == 'Reversed' || $payment_status == 'Canceled_Reversal') {
@@ -118,6 +129,10 @@ class Paypal implements IPaymentModule {
 					$transaction->sender->address->city = $data['address_city'];
 					$transaction->sender->address->country = $data['address_country_code'];
 				}
+
+				if($data['tax']){
+				    $transaction->tax = (float)$data['tax'];
+                }
 
 				$order->additional = $data;
 
@@ -155,6 +170,7 @@ class Paypal implements IPaymentModule {
 				case 'recurring_payment_profile_created':
 				case 'subscr_payment':
 				case 'web_accept':
+                case 'pro_hosted':
 				case 'express_checkout':
 				case 'merch_pmt':
 					$ret = $this->handle_as_purchase($data);
@@ -174,6 +190,9 @@ class Paypal implements IPaymentModule {
     }
 
 	function ipn(){
+	    if(!strpos($_SERVER['HTTP_USER_AGENT'], 'https://www.paypal.com/ipn')){
+	        return;
+        }
 		if ($this->client->validate_ipn ()){
             $data = $this->client->ipn_data;
 			return $this->handle_validated_ipn($data);
